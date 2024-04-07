@@ -3,13 +3,17 @@ import { Text, View } from 'react-native';
 import { Button } from 'react-native';
 import { TransactionItems } from '../../components/TransactionItems/TransactionItems';
 import { FlatList } from 'react-native';
+import { getTransactions } from '../../../firebase/firebase';
 
 export const Transactions = ({navigation, route }) => {
-  const { transactions } = route.params;
-  console.log('navigation', navigation);
-  const onPress = () => {
-    navigation.navigate('TransactionDetail', { transaction: transactions[0] });
-  }
+  const [ transactions, setTransactions ] = React.useState([]);
+
+  React.useEffect(() => {
+    console.log(setTransactions);
+    console.log(transactions);
+    getTransactions(setTransactions);
+  }, []);
+
   return (
     <View>
       <FlatList

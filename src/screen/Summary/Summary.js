@@ -1,10 +1,16 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+import { getTransactions } from '../../../firebase/firebase';
 
 export const Summary = ({ route }) => {
-  const { transactions } = route.params;
+  const [ transactions, setTransactions ] = React.useState([route.params.transactions]);
   const [hightestSpending, setHightestSpending] = React.useState(0);
   const [lowestSpending, setLowestSpending] = React.useState(0);
+
+  React.useEffect(() => {
+    getTransactions(setTransactions);
+  }, []);
+
   React.useEffect(() => {
     let tempHight = transactions[0];
     let tempLow = transactions[0];
@@ -19,7 +25,7 @@ export const Summary = ({ route }) => {
     setHightestSpending(tempHight);
     setLowestSpending(tempLow);
 
-  }, [route]);
+  }, [transactions]);
 
 
   return (
@@ -31,7 +37,7 @@ export const Summary = ({ route }) => {
       <View style={{borderWidth: 0.5, borderColor:'black', margin:10,}} />
       <View style={styles.row}>
         <Text> Balance: </Text>
-        <Text> ${transactions.reduce((acc, transaction) => acc + transaction.amount, 0)} </Text>
+        <Text> ${transactions.reduce((acc, transaction) => acc + parseInt(transaction.amount), 0)} </Text>
       </View>
       <View style={{borderWidth: 0.5, borderColor:'black', margin:10,}} />
       <View>
